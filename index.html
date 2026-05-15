@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mama's Video Library</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #ffb6c1, #ffd700);
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      background: #ff69b4;
+      color: white;
+      padding: 15px;
+      border-radius: 15px;
+    }
+
+    .video-box {
+      background: white;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 20px auto;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .video-box img {
+      width: 100%;
+      max-width: 250px;
+      height: auto;
+      border-radius: 10px;
+      margin: 0 auto 10px auto;
+      display: block;
+    }
+
+    .video-title {
+      font-size: 22px;
+      color: #ff1493;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    a {
+      display: inline-block;
+      text-decoration: none;
+      background: #ff69b4;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+    }
+
+    a:hover {
+      background: #ff1493;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Mama's Video</h1>
+
+<script>
+  // Fetch the links from the text file
+  fetch('linkperline.txt')
+    .then(response => response.text())
+    .then(data => {
+      const links = data.split('\n').filter(link => link.trim() !== '');
+      const container = document.createElement('div');
+
+      links.forEach((link, index) => {
+        const videoBox = document.createElement('div');
+        videoBox.className = 'video-box';
+
+        const img = document.createElement('img');
+        img.src = `https://via.placeholder.com/250?text=Video+${index + 1}`;
+        img.alt = `Video ${index + 1}`;
+
+        const title = document.createElement('div');
+        title.className = 'video-title';
+        title.textContent = `Video ${index + 1}`;
+
+        const anchor = document.createElement('a');
+        anchor.href = link;
+        anchor.target = '_blank';
+        anchor.textContent = 'Watch';
+
+        videoBox.appendChild(img);
+        videoBox.appendChild(title);
+        videoBox.appendChild(anchor);
+
+        container.appendChild(videoBox);
+      });
+
+      document.body.appendChild(container);
+    })
+    .catch(error => console.error('Error loading links:', error));
+</script>
+
+</body>
+</html>
