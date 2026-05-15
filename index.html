@@ -78,8 +78,11 @@
         const videoBox = document.createElement('div');
         videoBox.className = 'video-box';
 
+        const videoId = new URL(link).searchParams.get('v');
+        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+
         const img = document.createElement('img');
-        img.src = `https://via.placeholder.com/250?text=Video+${index + 1}`;
+        img.src = thumbnailUrl;
         img.alt = `Video ${index + 1}`;
 
         const title = document.createElement('div');
