@@ -67,7 +67,6 @@
 <h1>Mama's Video</h1>
 
 <script>
-  // List of YouTube links
   const links = [
     "https://www.youtube.com/live/eJ02A3NiRSE?si=Ey11RpEAfLvI7Hic",
     "https://www.youtube.com/live/CrkpBuPbuSg?si=T4t8Cpe6H22xXUYE",
@@ -109,25 +108,36 @@
     const videoBox = document.createElement('div');
     videoBox.className = 'video-box';
 
-    // Extract the video ID from the YouTube URL
     let videoId = null;
+
     try {
-      if (link.includes('youtube.com')) {
-        const urlParams = new URL(link).searchParams;
-        videoId = urlParams.get('v');
-      } else if (link.includes('youtu.be')) {
-        videoId = link.split('/').pop().split('?')[0];
+      const url = new URL(link);
+
+      // Normal youtube watch links
+      if (url.pathname === '/watch') {
+        videoId = url.searchParams.get('v');
       }
+
+      // Youtube live links
+      else if (url.pathname.startsWith('/live/')) {
+        videoId = url.pathname.split('/live/')[1];
+      }
+
+      // youtu.be links
+      else if (url.hostname.includes('youtu.be')) {
+        videoId = url.pathname.slice(1);
+      }
+
     } catch (error) {
-      console.error('Error parsing URL:', link, error);
+      console.error('Bad URL:', link);
     }
 
     if (videoId) {
-      const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+      const thumbnailUrl =
+        `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
 
       const img = document.createElement('img');
       img.src = thumbnailUrl;
-      img.alt = `Video ${index + 1}`;
 
       const title = document.createElement('div');
       title.className = 'video-title';
@@ -143,8 +153,6 @@
       videoBox.appendChild(anchor);
 
       container.appendChild(videoBox);
-    } else {
-      console.warn('Invalid YouTube URL:', link);
     }
   });
 
