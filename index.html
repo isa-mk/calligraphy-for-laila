@@ -67,64 +67,88 @@
 <h1>Mama's Video</h1>
 
 <script>
-  // Fetch the links from the text file
-  fetch('linkperline.txt')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+  // List of YouTube links
+  const links = [
+    "https://www.youtube.com/live/eJ02A3NiRSE?si=Ey11RpEAfLvI7Hic",
+    "https://www.youtube.com/live/CrkpBuPbuSg?si=T4t8Cpe6H22xXUYE",
+    "https://www.youtube.com/live/_dYQXs2EklQ?si=sw5hgwO2Zr60isCS",
+    "https://www.youtube.com/live/GrcBE7O2r-w?si=3zHZZj2-QLGWQHVz",
+    "https://www.youtube.com/live/hq6lzkQUosM?si=mwwl2FA6UfpAn-sx",
+    "https://www.youtube.com/live/v_bG7PkKXB4?si=zxrRZO9hR_1mzqzU",
+    "https://www.youtube.com/live/zom_9XpleLI?si=Mhg078APVoZ1jU55",
+    "https://www.youtube.com/live/OX2yxfFA8Cg?si=zZHGG4geZG7r_nVs",
+    "https://www.youtube.com/live/CQ21_jZj-s4?si=xX125P2JxvmkPcqB",
+    "https://www.youtube.com/live/Vsl1quxjn4o?si=XvVrm5gIVGchHk_d",
+    "https://www.youtube.com/live/0-2z5JmbLxE?si=J0nrwyy1nLZL4S8Q",
+    "https://www.youtube.com/live/FTErqFNWmSE?si=ogxEBiy-YaXc13dE",
+    "https://www.youtube.com/live/dN-8S1jSM9s?si=-r46zrQ-9gGh-Fwr",
+    "https://www.youtube.com/live/C6awzgZCA-k?si=Ma1vC-8GZlbsdEtl",
+    "https://www.youtube.com/live/wkwAByofPeE?si=vLxJLTkQo6Lm6QJZ",
+    "https://www.youtube.com/live/5H2PKrwrRJI?si=HXUhKEgsfDyHF4G8",
+    "https://www.youtube.com/live/ogTtA6szxQI?si=nrJ11rbEdpA0Kg8N",
+    "https://www.youtube.com/live/Zi4jNOrMG40?si=D8EEh6I-Bnl068l8",
+    "https://www.youtube.com/live/-MuGcRSgNIA?si=p-jGA-RGot6UN4a0",
+    "https://www.youtube.com/live/uCz0lCvL1No?si=RchkeIGBiQiyTy6n",
+    "https://www.youtube.com/live/AS8h97Wsgpc?si=eOjdZdtNjgHRoW_r",
+    "https://www.youtube.com/live/OX2yxfFA8Cg?si=nglsSJ-lSAnweRCL",
+    "https://www.youtube.com/live/M0CJsAJoZ6Q?si=ejHVa2-Lyc0XpyLV",
+    "https://www.youtube.com/live/oXDacR6nT7E?si=FByRwkXamnUIyq8a",
+    "https://www.youtube.com/live/xgay82uQ5ZM?si=AtWceuuA5diI14J_",
+    "https://www.youtube.com/live/nCBxSOjsGqc?si=CTIL3u28q1c37BI7",
+    "https://www.youtube.com/live/XRgvr_2Gcx0?si=SGM0palQxG6wIk4q",
+    "https://www.youtube.com/live/AmAUR7uqfhY?si=S5LfgLaBFDU0zGKG",
+    "https://www.youtube.com/live/yA59Ll_MsUg?si=tKcAIffw2PKyQDKP",
+    "https://www.youtube.com/live/gkITJZFuIAA?si=yowF4B17JauaBd-c",
+    "https://www.youtube.com/live/a75TkpHhWpA?si=alcaG0omwOaLWCnO",
+    "https://www.youtube.com/live/xVO1lDsLzFk?si=vMaUrD-Y4JAHcNUx"
+  ];
+
+  const container = document.createElement('div');
+
+  links.forEach((link, index) => {
+    const videoBox = document.createElement('div');
+    videoBox.className = 'video-box';
+
+    // Extract the video ID from the YouTube URL
+    let videoId = null;
+    try {
+      if (link.includes('youtube.com')) {
+        const urlParams = new URL(link).searchParams;
+        videoId = urlParams.get('v');
+      } else if (link.includes('youtu.be')) {
+        videoId = link.split('/').pop().split('?')[0];
       }
-      return response.text();
-    })
-    .then(data => {
-      const links = data.split('\n').filter(link => link.trim() !== '');
-      const container = document.createElement('div');
+    } catch (error) {
+      console.error('Error parsing URL:', link, error);
+    }
 
-      links.forEach((link, index) => {
-        const videoBox = document.createElement('div');
-        videoBox.className = 'video-box';
+    if (videoId) {
+      const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
 
-        // Extract the video ID from the YouTube URL
-        let videoId = null;
-        try {
-          if (link.includes('youtube.com')) {
-            const urlParams = new URL(link).searchParams;
-            videoId = urlParams.get('v');
-          } else if (link.includes('youtu.be')) {
-            videoId = link.split('/').pop().split('?')[0];
-          }
-        } catch (error) {
-          console.error('Error parsing URL:', link, error);
-        }
+      const img = document.createElement('img');
+      img.src = thumbnailUrl;
+      img.alt = `Video ${index + 1}`;
 
-        if (videoId) {
-          const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+      const title = document.createElement('div');
+      title.className = 'video-title';
+      title.textContent = `Video ${index + 1}`;
 
-          const img = document.createElement('img');
-          img.src = thumbnailUrl;
-          img.alt = `Video ${index + 1}`;
+      const anchor = document.createElement('a');
+      anchor.href = link;
+      anchor.target = '_blank';
+      anchor.textContent = 'Watch';
 
-          const title = document.createElement('div');
-          title.className = 'video-title';
-          title.textContent = `Video ${index + 1}`;
+      videoBox.appendChild(img);
+      videoBox.appendChild(title);
+      videoBox.appendChild(anchor);
 
-          const anchor = document.createElement('a');
-          anchor.href = link;
-          anchor.target = '_blank';
-          anchor.textContent = 'Watch';
+      container.appendChild(videoBox);
+    } else {
+      console.warn('Invalid YouTube URL:', link);
+    }
+  });
 
-          videoBox.appendChild(img);
-          videoBox.appendChild(title);
-          videoBox.appendChild(anchor);
-
-          container.appendChild(videoBox);
-        } else {
-          console.warn('Invalid YouTube URL:', link);
-        }
-      });
-
-      document.body.appendChild(container);
-    })
-    .catch(error => console.error('Error loading links:', error));
+  document.body.appendChild(container);
 </script>
 
 </body>
