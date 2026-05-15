@@ -79,8 +79,13 @@
         videoBox.className = 'video-box';
 
         // Extract the video ID from the YouTube URL
-        const videoIdMatch = link.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/.*[?&]v=([^&]+)/);
-        const videoId = videoIdMatch ? videoIdMatch[1] : null;
+        let videoId = null;
+        if (link.includes('youtube.com')) {
+          const urlParams = new URL(link).searchParams;
+          videoId = urlParams.get('v');
+        } else if (link.includes('youtu.be')) {
+          videoId = link.split('/').pop().split('?')[0];
+        }
 
         if (videoId) {
           const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
