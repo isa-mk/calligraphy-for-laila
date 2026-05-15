@@ -69,7 +69,12 @@
 <script>
   // Fetch the links from the text file
   fetch('linkperline.txt')
-    .then(response => response.text())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
     .then(data => {
       const links = data.split('\n').filter(link => link.trim() !== '');
       const container = document.createElement('div');
@@ -80,11 +85,15 @@
 
         // Extract the video ID from the YouTube URL
         let videoId = null;
-        if (link.includes('youtube.com')) {
-          const urlParams = new URL(link).searchParams;
-          videoId = urlParams.get('v');
-        } else if (link.includes('youtu.be')) {
-          videoId = link.split('/').pop().split('?')[0];
+        try {
+          if (link.includes('youtube.com')) {
+            const urlParams = new URL(link).searchParams;
+            videoId = urlParams.get('v');
+          } else if (link.includes('youtu.be')) {
+            videoId = link.split('/').pop().split('?')[0];
+          }
+        } catch (error) {
+          console.error('Error parsing URL:', link, error);
         }
 
         if (videoId) {
@@ -108,6 +117,8 @@
           videoBox.appendChild(anchor);
 
           container.appendChild(videoBox);
+        } else {
+          console.warn('Invalid YouTube URL:', link);
         }
       });
 
