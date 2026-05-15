@@ -78,27 +78,32 @@
         const videoBox = document.createElement('div');
         videoBox.className = 'video-box';
 
-        const videoId = new URL(link).searchParams.get('v');
-        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+        // Extract the video ID from the YouTube URL
+        const videoIdMatch = link.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/.*[?&]v=([^&]+)/);
+        const videoId = videoIdMatch ? videoIdMatch[1] : null;
 
-        const img = document.createElement('img');
-        img.src = thumbnailUrl;
-        img.alt = `Video ${index + 1}`;
+        if (videoId) {
+          const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
 
-        const title = document.createElement('div');
-        title.className = 'video-title';
-        title.textContent = `Video ${index + 1}`;
+          const img = document.createElement('img');
+          img.src = thumbnailUrl;
+          img.alt = `Video ${index + 1}`;
 
-        const anchor = document.createElement('a');
-        anchor.href = link;
-        anchor.target = '_blank';
-        anchor.textContent = 'Watch';
+          const title = document.createElement('div');
+          title.className = 'video-title';
+          title.textContent = `Video ${index + 1}`;
 
-        videoBox.appendChild(img);
-        videoBox.appendChild(title);
-        videoBox.appendChild(anchor);
+          const anchor = document.createElement('a');
+          anchor.href = link;
+          anchor.target = '_blank';
+          anchor.textContent = 'Watch';
 
-        container.appendChild(videoBox);
+          videoBox.appendChild(img);
+          videoBox.appendChild(title);
+          videoBox.appendChild(anchor);
+
+          container.appendChild(videoBox);
+        }
       });
 
       document.body.appendChild(container);
